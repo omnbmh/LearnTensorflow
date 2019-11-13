@@ -6,7 +6,10 @@ a = tf.constant([1.0, 2.0])
 b = tf.constant([3.0, 4.0])
 
 result = a + b
-print(result)
+print(result)  # 是一张计算图 并没有实际计算
+
+y = tf.matmul(a, b)
+print(y)
 
 # output
 # Tensor("add:0", shape=(2,), dtype=float32)
