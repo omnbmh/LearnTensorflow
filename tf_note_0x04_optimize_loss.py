@@ -1,6 +1,10 @@
 # -8- coding:utf-8 -8-
 '''
-预测 可乐的销量 影响特征 x1 x2
+优化 loss 参数
+
+使用三种优化方法
+
+预测 可乐的销量 影响特征 价格 x1 包装 x2
 '''
 # 两层简单神经网络(全连接)
 import tensorflow as tf
@@ -13,19 +17,25 @@ SEED = 23455
 # 32行 2 列  32个 包含 2个特征的数据 作为数据集
 rng = np.random.RandomState(SEED)
 X = rng.rand(32, 2)
-# 人为的制造一套标准  来验证结果
+# 人为的制造一套标准  来验证结果 两个特征相加 正负0.05 噪声
 Y = [[x0 + x1 + (rng.rand() / 10.0 - 0.05)] for (x0, x1) in X]
 
-# 定义神经网络的输入
+# 定义神经网络的输入 输出
 x = tf.placeholder(tf.float32, shape=(None, 2))
 y_ = tf.placeholder(tf.float32, shape=(None, 1))
+
+# 定义前向传播
 w1 = tf.Variable(tf.random_normal((2, 1), stddev=1, seed=1))
 y = tf.matmul(x, w1)
 
 # 定义 损失函数 及 反向传播方法
+
+# mse 均值方差
 loss = tf.reduce_mean(tf.square(y_ - y))
 # 自定义损失函数
-loss = tf.reduce_sum(tf.where(tf.greater(y, y_), 9*(y - y_), (y_ - y)))
+# loss = tf.reduce_sum(tf.where(tf.greater(y, y_), 9 * (y - y_), (y_ - y)))
+
+# 反向传播方法为梯度下降
 train_step = tf.train.GradientDescentOptimizer(0.001).minimize(loss)
 # 生成会话 训练
 with tf.Session() as sess:
@@ -43,5 +53,5 @@ with tf.Session() as sess:
             print (sess.run(w1))
 
     # 输出训练后的值
-    print("w1 ---")
+    print("Final w1 ---")
     print (sess.run(w1))
