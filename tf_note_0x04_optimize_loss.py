@@ -2,7 +2,7 @@
 '''
 优化 loss 参数
 
-使用三种优化方法
+使用三种优化方法 均方误差 自定义 交叉熵
 
 预测 可乐的销量 影响特征 价格 x1 包装 x2
 '''
@@ -31,9 +31,14 @@ y = tf.matmul(x, w1)
 # 定义 损失函数 及 反向传播方法
 
 # mse 均值方差
-loss = tf.reduce_mean(tf.square(y_ - y))
+# loss = tf.reduce_mean(tf.square(y_ - y))
 # 自定义损失函数
-# loss = tf.reduce_sum(tf.where(tf.greater(y, y_), 9 * (y - y_), (y_ - y)))
+# 实际值 大于 预测值 COST 否则 PROFIT
+# loss = tf.reduce_sum(tf.where(tf.greater(y, y_), (y - y_), 9 * (y_ - y)))
+
+# 交叉熵 loss
+ce = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y, labels=tf.argmax(y_, 1))
+loss = tf.reduce_mean(ce)
 
 # 反向传播方法为梯度下降
 train_step = tf.train.GradientDescentOptimizer(0.001).minimize(loss)
@@ -41,7 +46,7 @@ train_step = tf.train.GradientDescentOptimizer(0.001).minimize(loss)
 with tf.Session() as sess:
     init_op = tf.global_variables_initializer()
     sess.run(init_op)
-    STEPS = 2000
+    STEPS = 20000
     for i in range(STEPS):
         start = (i * BATCH_SIZE) % 32
         end = start + BATCH_SIZE
@@ -55,3 +60,17 @@ with tf.Session() as sess:
     # 输出训练后的值
     print("Final w1 ---")
     print (sess.run(w1))
+
+'''
+Final w1 --- 均值方差
+[[0.98019385]
+ [1.0159807 ]]
+ 
+ Final w1 --- 自定义
+[[1.020171 ]
+ [1.0425103]]
+ 
+ Final w1 --- 交叉熵
+[[-0.8113182]
+ [ 1.4845988]]
+'''
