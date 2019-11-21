@@ -1,5 +1,8 @@
 # -8- coding:utf-8 -8-
+'''
+实现手写数字图片的识别
 
+'''
 import tensorflow as tf
 import numpy as np
 import os
