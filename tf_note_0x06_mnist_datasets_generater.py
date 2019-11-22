@@ -19,8 +19,8 @@ image_test_path = './mnist_data_jpg/mnist_test_jpg_1000'
 label_test_path = './mnist_data_jpg/mnist_test_jpg_1000.txt'
 tfrecord_test = './data/mnist_test.tfrecords'
 data_path = './data'
-resize_height = 28
-resize_width = 28
+resize_height = 36
+resize_width = 36
 
 
 def write_tfrecord(tfrecord_name, image_path, label_path):
@@ -70,7 +70,7 @@ def read_tfrecord(tfrecord_path):
                                            'img_raw': tf.FixedLenFeature([], tf.string)
                                        })
     img = tf.decode_raw(features["img_raw"], tf.uint8)
-    img.set_shape([784])
+    img.set_shape([resize_width * resize_height])
     img = tf.cast(img, tf.float32) * (1. / 255)
     label = tf.cast(features['label'], tf.float32)
     return img, label
@@ -114,7 +114,7 @@ def gen_image():
 
 def generate_captcha(image_path, filename, num):
     # 生成一个Image 指定大小 和 背景色
-    image = Image.new('RGB', (36, 36), (255, 255, 255))
+    image = Image.new('RGB', (resize_width, resize_height), (255, 255, 255))
 
     # 来一个画笔
     draw = ImageDraw.Draw(image)
