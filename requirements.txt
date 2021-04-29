@@ -1,2 +1,11 @@
-tensorflow>=1.8.0
-numpy==1.14.4
+numpy
+pandas
+matplotlib
+scipy
+sklearn
+tensorflow==1.15.3
+tensorlayer==1.6.7
+keras==2.0.7
+nltk==3.2.4
+tushare==1.2.60
+plotly==2.0.15
